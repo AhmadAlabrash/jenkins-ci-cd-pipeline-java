@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Java CI/CD Project Diagram</title>
+  <style>
+    :root {
+      --bg: #f6f8fc;
+      --bg2: #eef3ff;
+      --card: #ffffff;
+      --border: #d8e0ef;
+      --text: #1f2937;
+      --muted: #5b6472;
+      --blue: #2563eb;
+      --blue2: #1d4ed8;
+      --green: #16a34a;
+      --orange: #ea580c;
+      --purple: #7c3aed;
+      --red: #dc2626;
+      --shadow: 0 14px 35px rgba(15, 23, 42, 0.08);
+      --soft: #f8fafc;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, var(--bg), var(--bg2));
+    }
+
+    .page {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 28px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      margin: 0 0 26px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .top-note {
+      background: #ecfeff;
+      border: 1px solid #a5f3fc;
+      color: #155e75;
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-bottom: 22px;
+      font-size: 14px;
+    }
+
+    .diagram {
+      display: grid;
+      grid-template-columns: 230px 430px 250px 360px 290px;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+      position: relative;
+      min-height: 220px;
+    }
+
+    .panel h2 {
+      margin: 0 0 14px;
+      font-size: 24px;
+    }
+
+    .center { text-align: center; }
+
+    .icon-circle {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 16px;
+      font-size: 42px;
+      color: white;
+      background: #111827;
+      box-shadow: 0 10px 22px rgba(17, 24, 39, 0.18);
+    }
+
+    .icon-circle.jenkins { background: linear-gradient(135deg, #dc2626, #991b1b); }
+    .icon-circle.gitlab { background: linear-gradient(135deg, #fb923c, #f97316); }
+    .icon-circle.k8s { background: linear-gradient(135deg, #2563eb, #1d4ed8); }
+    .icon-circle.docker { background: linear-gradient(135deg, #0ea5e9, #2563eb); }
+
+    .label {
+      display: inline-block;
+      background: #eff6ff;
+      color: var(--blue2);
+      border: 1px solid #bfdbfe;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+
+    .pipeline-header {
+      margin-bottom: 18px;
+      border: 2px solid #94a3b8;
+      border-radius: 18px;
+      padding: 16px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 24px;
+      background: var(--soft);
+    }
+
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .step {
+      position: relative;
+      border-radius: 14px;
+      padding: 15px 16px;
+      color: white;
+      font-weight: 700;
+      text-align: center;
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.22);
+      background: var(--blue);
+    }
+
+    .step small {
+      display: block;
+      font-size: 12px;
+      margin-top: 4px;
+      opacity: 0.9;
+      font-weight: 600;
+    }
+
+    .step.orange { background: var(--orange); box-shadow: 0 8px 18px rgba(234, 88, 12, 0.22); }
+    .step.purple { background: var(--purple); box-shadow: 0 8px 18px rgba(124, 58, 237, 0.22); }
+    .step.green { background: var(--green); box-shadow: 0 8px 18px rgba(22, 163, 74, 0.22); }
+    .step.red { background: var(--red); box-shadow: 0 8px 18px rgba(220, 38, 38, 0.22); }
+
+    .step:not(:last-child)::after {
+      content: "↓";
+      position: absolute;
+      left: 50%;
+      bottom: -22px;
+      transform: translateX(-50%);
+      color: #64748b;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .mini-box {
+      border: 2px dashed #cbd5e1;
+      background: #fff;
+      border-radius: 18px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .mini-box h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .docker-tags {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .tag {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1d4ed8;
+      border-radius: 12px;
+      padding: 10px 12px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .gitlab-flow {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .gl-step {
+      background: #fff7ed;
+      border: 1px solid #fdba74;
+      color: #9a3412;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-weight: 700;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .cluster {
+      margin-top: 18px;
+      border: 2px dashed #cbd5e1;
+      border-radius: 20px;
+      padding: 18px;
+      background: #f8fafc;
+    }
+
+    .agent-box {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      color: white;
+      border-radius: 18px;
+      padding: 14px 16px;
+      text-align: center;
+      font-weight: 800;
+      margin-bottom: 14px;
+      box-shadow: 0 10px 18px rgba(29, 78, 216, 0.2);
+    }
+
+    .helm-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1d4ed8;
+      border-radius: 14px;
+      padding: 12px 14px;
+      text-align: center;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .lb {
+      width: 190px;
+      margin: 0 auto 18px;
+      background: var(--blue2);
+      color: white;
+      border-radius: 999px;
+      padding: 12px 18px;
+      text-align: center;
+      font-weight: 800;
+      box-shadow: 0 10px 18px rgba(29, 78, 216, 0.2);
+    }
+
+    .apps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .app-box {
+      background: white;
+      border: 1px solid #bfdbfe;
+      border-radius: 16px;
+      padding: 14px 10px;
+      text-align: center;
+      font-weight: 700;
+      box-shadow: 0 8px 18px rgba(59, 130, 246, 0.12);
+      font-size: 14px;
+    }
+
+    .emoji {
+      display: block;
+      font-size: 30px;
+      margin-bottom: 8px;
+    }
+
+    .arrow-strip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--muted);
+      font-weight: 700;
+      margin-top: 10px;
+      font-size: 13px;
+    }
+
+    .footer {
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+      background: rgba(255,255,255,0.65);
+      border: 1px solid #dbe4f3;
+      border-radius: 16px;
+      padding: 14px 16px;
+    }
+
+    code {
+      background: #eff6ff;
+      border: 1px solid #dbeafe;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
+    @media (max-width: 1450px) {
+      .diagram {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>Java App CI/CD + CD Architecture</h1>
+    <p class="subtitle">GitHub source code → Jenkins CI → Docker Hub image registry → GitLab CD with GitLab Agent → Kubernetes deployment with Helm</p>
+
+    <div class="top-note">
+      This diagram shows the full project flow: Jenkins handles CI tasks and pushes the Java/Tomcat image to Docker Hub, then triggers GitLab, and GitLab deploys the selected image tag to the Kubernetes cluster using Helm through GitLab Agent.
+    </div>
+
+    <div class="diagram">
+      <section class="panel center">
+        <div class="icon-circle">🐙</div>
+        <h2>GitHub</h2>
+        <p class="muted">Source code repository for the Java web application inside <code>my-java-app/</code>.</p>
+        <div class="label">Push / Commit</div>
+        <div class="arrow-strip">Webhook → Jenkins</div>
+      </section>
+
+      <section class="panel">
+        <div class="icon-circle jenkins">🤵</div>
+        <div class="pipeline-header">Jenkins CI Pipeline</div>
+        <div class="steps">
+          <div class="step">1. Checkout Code<small>GitHub repository</small></div>
+          <div class="step">2. Maven Build &amp; Test<small><code>mvn clean test package</code></small></div>
+          <div class="step orange">3. SonarQube Scan<small>Static code analysis</small></div>
+          <div class="step orange">4. Quality Gate<small>Pipeline waits for result</small></div>
+          <div class="step purple">5. Build Docker Image<small>Tomcat image with WAR file</small></div>
+          <div class="step purple">6. Push to Docker Hub<small>Version tag + latest tag</small></div>
+          <div class="step red">7. Trigger GitLab Deploy<small>Pipeline Trigger API</small></div>
+        </div>
+      </section>
+
+      <section class="panel center">
+        <div class="icon-circle docker">🐳</div>
+        <h2>Docker Hub</h2>
+        <p class="muted">Stores the built container image for deployment.</p>
+        <div class="docker-tags">
+          <div class="tag">ahmad09x/java-app:4</div>
+          <div class="tag">ahmad09x/java-app:latest</div>
+        </div>
+        <div class="mini-box">
+          <h3>Produced by Jenkins</h3>
+          <div class="muted">The CD pipeline deploys a specific image tag passed from Jenkins to GitLab.</div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="icon-circle gitlab">🦊</div>
+        <h2>GitLab CD Project</h2>
+        <p class="muted">Dedicated deployment repository containing Helm chart files and GitLab CI/CD configuration.</p>
+        <div class="gitlab-flow">
+          <div class="gl-step">Pipeline Trigger Token</div>
+          <div class="gl-step">.gitlab-ci.yml</div>
+          <div class="gl-step">Variables: <code>KUBE_CONTEXT</code>, <code>DOCKER_IMAGE</code>, <code>IMAGE_TAG</code></div>
+          <div class="gl-step">Helm chart in <code>helm/java-app/</code></div>
+        </div>
+        <div class="mini-box">
+          <h3>Deployment Logic</h3>
+          <div class="muted">GitLab receives the image tag from Jenkins, switches to the GitLab Agent Kubernetes context, and runs <code>helm upgrade --install</code>.</div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="icon-circle k8s">☸️</div>
+        <h2>Kubernetes Cluster</h2>
+        <p class="muted">Application is deployed through GitLab Agent and Helm into the target namespace.</p>
+        <div class="cluster">
+          <div class="agent-box">GitLab Agent (java-agent)</div>
+          <div class="helm-box">Helm Deploy / Upgrade</div>
+          <div class="lb">LoadBalancer Service</div>
+          <div class="apps">
+            <div class="app-box"><span class="emoji">☕</span>Java App Pod</div>
+            <div class="app-box"><span class="emoji">☕</span>Java App Pod</div>
+            <div class="app-box"><span class="emoji">☕</span>Java App Pod</div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="footer">
+      <strong>End-to-end flow:</strong> Developer pushes code to GitHub, Jenkins runs Maven tests and SonarQube checks, builds the Tomcat-based Java image, and pushes it to Docker Hub. Jenkins then triggers the GitLab deployment pipeline with the selected image tag. GitLab uses the configured Agent context to connect to Kubernetes and deploys the application using Helm, updating the running pods behind a LoadBalancer service.
+    </div>
+  </div>
+</body>
+</html>
