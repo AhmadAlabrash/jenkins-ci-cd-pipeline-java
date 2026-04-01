@@ -80,24 +80,7 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
-            steps {
-                sh '''
-                    kubectl get nodes
-                    helm lint ${HELM_CHART_PATH}
-
-                    helm upgrade --install ${HELM_RELEASE} ${HELM_CHART_PATH} \
-                      --namespace ${HELM_NAMESPACE} \
-                      --create-namespace \
-                      --set image.repository=${DOCKER_IMAGE} \
-                      --set image.tag=${IMAGE_TAG}
-
-                    kubectl get pods -n ${HELM_NAMESPACE}
-                    kubectl get svc -n ${HELM_NAMESPACE}
-                '''
-            }
-        }
-    }
+       
 
     post {
         success {
