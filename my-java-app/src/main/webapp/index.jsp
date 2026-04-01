@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Welcome to Our First Project</title>
+    <title>Welcome To Our Project</title>
     <style>
         body {
             font-family: Arial, sans-serif;
