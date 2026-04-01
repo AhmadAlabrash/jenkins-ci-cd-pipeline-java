@@ -80,6 +80,21 @@ pipeline {
             }
         }
 
+        stage('Trigger GitLab Deploy') {
+    steps {
+        withCredentials([string(credentialsId: 'gitlab-trigger-token', variable: 'GITLAB_TRIGGER_TOKEN')]) {
+            sh '''
+                curl --fail --request POST \
+                  --form token=$GITLAB_TRIGGER_TOKEN \
+                  --form ref=main \
+                  --form "variables[IMAGE_TAG]=${IMAGE_TAG}" \
+                  --form "variables[DOCKER_IMAGE]=${DOCKER_IMAGE}" \
+                  https://gitlab.com/api/v4/projects/80914366/trigger/pipeline
+            '''
+        }
+    }
+}
+
        }
 
     post {
