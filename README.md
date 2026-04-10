@@ -23,6 +23,13 @@ This project implements a full DevOps workflow:
 
 ---
 
+## 💻 Full Stack Project Demo
+
+Watch this project in action:
+
+[![Full Stack Demo ▶️](https://img.youtube.com/vi/2J3K4R2oX84/maxresdefault.jpg)](https://youtu.be/2J3K4R2oX84)
+
+
 ## 🏗️ Project Structure
 
 ```
